@@ -7,8 +7,6 @@ Thumbs.db
 
 # Build
 node_modules/
-Gruntfile.js
-package.json
 
 # IDEs
 .buildpath

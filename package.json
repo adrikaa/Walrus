@@ -1,0 +1,10 @@
+{
+  "name": "Walrus",
+  "version": "0.0.1",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-shell": "~0.6.1",
+    "grunt-contrib-copy": "~0.5.0"
+  }
+}
