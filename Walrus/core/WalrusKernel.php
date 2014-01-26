@@ -1,60 +1,66 @@
 <?php
+
 /**
- * Author: Walrus Team
- * "Created: 16:10 13/12/13
+ * Walrus Framework
+ * File maintened by: Nicolas Beauvais (E-Wok)
+ * Created: 16:10 13/12/13
  */
 
 namespace Walrus\core;
 
-use Walrus\core\route\Route as WalrusRoute;
+use MtHaml\Exception;
 
 class WalrusKernel
 {
 
     public static function execute()
     {
+        //self::bootstrap();
+        try {
+            $WalrusRoute = new WalrusRouter();
+            $WalrusRoute->execute();
+        } catch (Exception $e) {
 
-        self::bootstrap();
-        WalrusRoute::makeRoutes();
+        }
     }
 
     private static function bootstrap()
     {
-      $config_file = "../../config/config.yml";
-      if (exists($config_file))
-      {
-	$array_info = \Spyc::YAMLLoad($config_file);
-	// \Spyc::YAMLDump($array, 4, 60)
+        $config_file = "../config/config.yml";
 
-	if ($array_info->templating->default == 'haml')
-	  //installer haml
-	elseif ($array_info->templating->default == 'smarty')
-	  //installer smarty
-	else
-	  //installer twig
+        if (file_exists($config_file)) {
 
-	if ($array_info->database->language == 'MySQL')
-	{
-	  //installer MySQL
-	  $dbname = $array_info->database->name;
-	  $dbpwd = $array_info->database->password;
-	}
+            $array_info = \Spyc::YAMLLoad($config_file);
+            // \Spyc::YAMLDump($array, 4, 60)
 
-      }
-      else
-      {
-	$content = '
-database:
-    language:  "MySQL"
-    name: "project"
-    password: ""
+            if ($array_info['templating']['default'] == 'haml') {
+                //installer haml
+            } elseif ($array_info['templating']['default'] == 'smarty') {
+                //installer smarty
+            } else {
+                //installer twig
+            }
 
-templating:
-    default: "haml"
-';
-	file_put_contents($config_file, $content, FILE_APPEND);
-      }
-	
+            if ($array_info['database']['language'] == 'MySQL') {
+                //installer MySQL
+                $dbname = $array_info['database']['name'];
+                $dbpwd = $array_info['database']['password'];
+            } else {
+                // autre db ?
+            }
+        } else {
+            $php_content = array(
+                "database" => array("language" => "MySQL",
+                                    "name" => "project",
+                                    "password" => ""),
+                "templating" => array("default" => "haml")
+            );
+
+            $yml_content = \Spyc::YAMLDump($php_content);
+
+            file_put_contents($config_file, $yml_content, FILE_APPEND);
+        }
+
         //configuration here
     }
 }
